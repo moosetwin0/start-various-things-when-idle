@@ -1,4 +1,4 @@
-# start-vpn-torrent-client-and-archiveteam-warrior-when-idle
+# start the vpn, torrent client, and archiveteam warrior vm when idle
 
 before first start you need to replace some parts of the python code where mentioned
 
