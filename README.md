@@ -1,4 +1,4 @@
-# start the vpn, torrent client, and archiveteam warrior vm when idle
+# start the wireguard vpn, torrent client, and archiveteam warrior vm when idle
 
 before first start you need to replace some parts of the python code at the top of the file, where mentioned
 
