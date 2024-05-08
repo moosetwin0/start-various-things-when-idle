@@ -31,7 +31,7 @@ while(True): # this is so that the idle checking still continues if the computer
     fixedposition = win32api.GetCursorPos()
     while(True):
         position = win32api.GetCursorPos()
-        if fixedposition != position:
+        if fixedposition != position: # this code also requires admin unfortunately
             os.popen(f'"C:\\Program Files\\Oracle\\VirtualBox\\VBoxManage.exe" controlvm "{atvm}" acpipowerbutton')
             os.popen('taskkill /im "qbittorrent.exe"')
             # comment the below if you don't want it to turn off the vpn when computer becomes active
