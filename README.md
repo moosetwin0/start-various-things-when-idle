@@ -19,3 +19,4 @@ TODO:
 - Detect invalid config file and tell user
 - Detect dangerous settings (other) and tell user
 - Fix unclear wording in config file, specifically to mention that '<name> = %' means opening or not opening <name>
+- Config option to not open when something is fullscreen, so that it stops opening while I'm watching a video
