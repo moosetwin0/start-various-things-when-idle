@@ -1,6 +1,6 @@
-# start the wireguard vpn, torrent client, and archiveteam warrior vm when idle
+# start various things when idle
 
-before first start you need to replace some parts of the python code at the top of the file, where mentioned
+I recommend starting once and then changing config file to match preference, I might add a 'detected config file change, restart?' message in a furture update
 
 this requires administrator permissions for wireguard and taskkill, (see code if you are worried) 
-it is recommended to run this code whenever your computer starts
+it is recommended to run this code whenever your computer starts, I use Task Scheduler for this
