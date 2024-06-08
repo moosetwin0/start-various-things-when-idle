@@ -13,10 +13,11 @@ I recommend starting once and then changing config file to match preference
 
 TODO:
 - Add config option for opening in background, useful for when screensaver time does not match config time
-- - Look into CLIs or python modules for qbittorrent and wireguard
+  - Look into CLIs or python modules for qbittorrent and wireguard
 - Detect config changes and ask user if they want to restart program
 - Detect if run without administrator permissions and tell user
 - Detect invalid config file and tell user
 - Detect dangerous settings (other) and tell user
 - Fix unclear wording in config file, specifically to mention that '<name> = %' means opening or not opening <name>
 - Config option to not open when something is fullscreen, so that it stops opening while I'm watching a video
+  - Config option to either open % seconds later apon exiting fullscreen or just to reset mousetimer
