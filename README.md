@@ -21,3 +21,4 @@ TODO:
 - Fix unclear wording in config file, specifically to mention that '<name> = %' means opening or not opening <name>
 - Config option to not open when something is fullscreen, so that it stops opening while I'm watching a video
   - Config option to either open % seconds later apon exiting fullscreen or just to reset mousetimer
+- Check github for updates? idfk
