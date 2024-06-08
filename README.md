@@ -6,7 +6,7 @@
   - turn off qBittorrent in the config file
   - keep the VPN on, also in the config file
 
-This requires administrator permissions for starting/stopping programs, (see code if you are worried) 
+This requires administrator permissions for a lot of things, (see code if you are worried) 
 
 It is recommended to run this code whenever your computer starts, I use Task Scheduler for this
 I recommend starting once and then changing config file to match preference
