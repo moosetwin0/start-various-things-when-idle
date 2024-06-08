@@ -9,8 +9,8 @@ it is recommended to run this code whenever your computer starts, I use Task Sch
 I recommend starting once and then changing config file to match preference
 
 TODO:
-- Add messagebox asking user if they want to restart when detecting config changes
 - Add config option for opening in background, useful for when screensaver time does not match config time
+- Detect config changes and ask user if they want to restart program
 - Detect if run without administrator permissions and tell user
 - Detect invalid config file and tell user
 - Detect dangerous settings (other) and tell user
