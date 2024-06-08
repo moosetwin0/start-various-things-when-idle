@@ -19,3 +19,4 @@ TODO:
 - Detect invalid config file and tell user
 - Detect dangerous settings (other) and tell user
 - Check github for updates? idfk
+  - update config file somehow
