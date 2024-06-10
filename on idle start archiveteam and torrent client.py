@@ -6,16 +6,22 @@ from ctypes import windll
 from time import sleep
 import savepagenow
 
-# check if window is fullscreen, shamefully stolen from stackoverflow
-def Fullscreen():
-    user32 = windll.user32
-    user32.SetProcessDPIAware()
-    screensize = (0, 0, user32.GetSystemMetrics(0), user32.GetSystemMetrics(1))
-    windowsize = win32gui.GetWindowRect(user32.GetForegroundWindow())
-    if screensize == windowsize:
-        return True
-    else:
-        return False
+# check if running in vscode and if so set working directory so I can debug in vscode without random errors
+# also stolen from stackoverflow
+if 'TERM_PROGRAM' in os.environ.keys() and os.environ['TERM_PROGRAM'] == 'vscode':
+    os.chdir(os.path.expanduser('~\\Desktop\\Code'))
+
+
+# check if window is fullscreen
+# this was originally stolen from stackoverflow but it didn't work correctly so I stole it from chatgpt instead
+def is_fullscreen():
+    active_window = win32gui.GetForegroundWindow()
+    window_rect = win32gui.GetWindowRect(active_window)
+    width = window_rect[2] - window_rect[0]
+    height = window_rect[3] - window_rect[1]
+    screen_width = win32api.GetSystemMetrics(0)
+    screen_height = win32api.GetSystemMetrics(1)
+    return width == screen_width and height == screen_height
 
 config = configparser.ConfigParser(allow_no_value=True)
 
@@ -58,7 +64,7 @@ while(True): # this is so that the idle checking still continues if the computer
         if fixedposition != position:
             mousetimer = 0
             fixedposition = win32api.GetCursorPos()
-        if config['booleans']['do not detect idle while fullscreen'] == 'True' and Fullscreen == True:
+        if config['booleans']['do not detect idle while fullscreen'] == 'True' and is_fullscreen():
             mousetimer = 0
             # mousetimer will constantly be at 0.05 if fullscreen because of above and below but it does not matter
         mousetimer = round((mousetimer + 0.05), 2) # rounding is to remove floating point errors, not very important but it looks nice
