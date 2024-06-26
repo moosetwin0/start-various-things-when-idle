@@ -6,7 +6,7 @@
   - turn off qBittorrent in the config file
   - keep the VPN on, also in the config file
 
-Known Issues:
+ℹ️Known Issues:
 - savepagenow does not work with task scheduler, if you use task scheduler this will cause the program to get stuck forever: turn this off if you use task scheduler
 
 This requires administrator permissions for a lot of things, (see code if you are worried) 
