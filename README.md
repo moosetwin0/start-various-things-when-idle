@@ -9,10 +9,11 @@
 This requires administrator permissions for a lot of things, (see code if you are worried) 
 
 It is recommended to run this code whenever your computer starts, I use Task Scheduler for this
-I recommend starting once and then changing config file to match preference
+- I recommend starting once and then changing config file to match preference
 
 TODO:
-- Fix it not closing on its own xd
+- Fix it not closing on its own - IMPORTANT!
+- Detect if mouse moves soon after opening archiveteam VM, and force shutdown if so (soft shutdown does not work soon after starting VMs)
 - Add config option for opening in background, useful for when screensaver time does not match config time
   - Look into CLIs or python modules for qbittorrent and wireguard
 - Detect config changes and ask user if they want to restart program
