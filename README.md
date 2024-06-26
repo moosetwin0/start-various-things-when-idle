@@ -16,6 +16,8 @@ TODO:
 - Detect if mouse moves soon after opening archiveteam VM, and force shutdown if so (soft shutdown does not work soon after starting VMs)
 - Add config option for opening in background, useful for when screensaver time does not match config time
   - Look into CLIs or python modules for qbittorrent and wireguard
+- Apon first start, create config file and ask user if they want to change it, then restart to apply config changes
+  - Make it so that you don't need to restart to apply config changes 
 - Detect config changes and ask user if they want to restart program
 - Detect if run without administrator permissions and tell user
 - Detect invalid config file and tell user
