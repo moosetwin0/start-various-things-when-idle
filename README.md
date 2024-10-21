@@ -15,16 +15,12 @@ It is recommended to run this code whenever your computer starts, I use Task Sch
 - I recommend starting once and then changing config file to match preference
 
 TODO:
-- Fix YTDLP not working
-- Turn off mouse detection if in debug environment to help with programming, replace with keypress
 - Detect if mouse moves soon after opening archiveteam VM, and force shutdown if so (soft shutdown does not work soon after starting VMs)
 - Add config option for opening in background, useful for when screensaver time does not match config time
   - Look into CLIs or python modules for qbittorrent and wireguard
-- Apon first start, create config file and ask user if they want to change it, then restart to apply config changes
-  - Make it so that you don't need to restart to apply config changes 
 - Detect config changes and ask user if they want to restart program
 - Detect if run without administrator permissions and tell user
 - Detect invalid config file and tell user
 - Detect dangerous settings (other) and tell user
-- Check github for updates? idfk
-  - update config file somehow
+- check github for updates? idfk
+  - automatically update config file somehow
