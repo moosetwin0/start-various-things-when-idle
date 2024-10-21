@@ -1,14 +1,16 @@
-# there are a lot of dependancies that could be merged here, TODO
+# there are a lot of dependencies that could be merged here, TODO
 import os
 import win32api
 import win32gui
 import configparser
 from time import sleep
-# TODO find out a way to make savepagenow and psutil optional depenencies(?)
+# TODO find out a way to make these optional dependencies
+# look at https://stackoverflow.com/questions/563022/whats-python-good-practice-for-importing-and-offering-optional-features
 import savepagenow
 import psutil
-# it makes me a bit uncomfortable having a dependancy that no regular user will use, it should come pre-packaged with python but I still feel uncomfortable, TODO 
-#from timeit import timeit # silly
+import subprocess
+# it makes me a bit uncomfortable having a dependency that no regular user will use, it should come pre-packaged with python but I still feel uncomfortable, TODO 
+#from timeit import timeit # silly # commented out due to only being used for debug purposes
 
 # I spent 3 hours trying to figure this out, I ended up copying code from the internet but if I touch it the code stops working and I can't figure out why
 # oh yeah I copied it from https://thispointer.com/python-check-if-a-process-is-running-by-name-and-find-its-process-id-pid/
@@ -23,7 +25,7 @@ def checkIfProcessRunning(processName):
 
 # I wanted to have this set the environment for configparser if debug was enabled *in configparser*
 if 'TERM_PROGRAM' in os.environ.keys() and os.environ['TERM_PROGRAM'] == 'vscode':
-    os.chdir(os.path.expanduser('~\\Desktop\\Code'))
+    os.chdir(os.path.expanduser('~\\Desktop\\Code')) # configparser breaks in vscode without this
     debug = True
 else: debug = False
 
@@ -31,6 +33,8 @@ else: debug = False
 # this was originally stolen from stackoverflow but it didn't work correctly so I stole it from chatgpt instead
 def is_fullscreen():
     active_window = win32gui.GetForegroundWindow()
+    while active_window == 0: # active_window will temporarily be 0 while switching windows
+        active_window = win32gui.GetForegroundWindow()
     window_rect = win32gui.GetWindowRect(active_window)
     width = window_rect[2] - window_rect[0]
     height = window_rect[3] - window_rect[1]
@@ -81,6 +85,8 @@ def blacklisted():
         return True
     else: return False
 
+if debug: config['misc']['time before idle'] = '10' # set time before idle to workable level if in debug environment
+
 # more optimizable code
 # TODO, use an actual timer library rather than trying to make a crap timer that lags every time you lag
 while(True): # this is so that the idle checking still continues if the computer becomes (temporarily) active
@@ -90,28 +96,35 @@ while(True): # this is so that the idle checking still continues if the computer
     while(mousetimer < int(config['misc']['time before idle'])):
         position = win32api.GetCursorPos()
         # the below two if statements could probably be merged, TODO
-        if fixedposition != position:
+        if (fixedposition != position) and (not debug):
             mousetimer = 0
             fixedposition = win32api.GetCursorPos()
         if (config['booleans']['do not detect idle while fullscreen'] == 'True' and is_fullscreen()) or blacklisted():
             mousetimer = 0
             # mousetimer will constantly be at 0.05 if fullscreen because of above and below but it does not matter
-        if debug: print(mousetimer)
+        if debug: 
+            if win32api.GetAsyncKeyState(35) < 0:
+                mousetimer = 0
+            print(mousetimer)
         mousetimer = round((mousetimer + 0.05), 2) # rounding is to remove floating point errors, does not affect anything but it looks nice
         sleep(0.05)
 
     # runs the programs, REQUIRES ADMIN
     # these should be done without the repeated if statements but I (mistakenly) thought it wouldn't matter, TODO
-    # subprocess doesn't like working in the background so popen is used instead
+    # subprocess doesn't like working in the background* so popen is used instead
     # apparently True != 'True' and I wish I knew that yesterday before I changed all the code
+    #breakpoint()
     if config['booleans']['wireguard on/off'] == 'True':
         os.popen(fr'"{config['paths']['wireguard executable path']}" /installtunnelservice "{config['paths']['wireguard config path']}"')
     if config['booleans']['qbittorrent on/off'] == 'True':
         os.popen(fr'"{config['paths']['qbittorrent executable path']}"')
     if config['booleans']['archiveteam VM on/off'] == 'True':
         os.popen(fr'"{config['paths']['virtualbox executable path']}" startvm "{config['misc']['archiveteam warrior vm name']}"')
-    if config['booleans']['ytsync on/off'] == 'True':
-        os.popen(fr'"{config['paths']['ytsync path']}"')
+    if config['booleans']['ytsync on/off'] == 'True': # ytdlp does not work with os.popen() so I have to do this shiz
+        dir = os.getcwd()
+        os.chdir(os.path.dirname(fr'"{config['paths']['ytsync path']}"').strip('\"').replace('\\','/')) # this hack is very cursed
+        subprocess.Popen(fr'"{config['paths']['ytsync path']}"')
+        os.chdir(dir)
     # I tried to make this just loop 3 times but I got overwhelmed so you get more redundant code
 
     # savepagenow does not work with task scheduler, turn it off if you use task scheduler!
@@ -127,7 +140,7 @@ while(True): # this is so that the idle checking still continues if the computer
     fixedposition = win32api.GetCursorPos()
     while(True):
         position = win32api.GetCursorPos()
-        if fixedposition != position: # this code also requires admin unfortunately
+        if ((not debug) and (fixedposition != position)) or (debug and (win32api.GetAsyncKeyState(35) < 0)):
             if config['booleans']['archiveteam VM turns off after idle ends'] == 'True':
                 os.popen(fr'"{config['paths']['virtualbox executable path']}" controlvm "{config['misc']['archiveteam warrior vm name']}" acpipowerbutton')
             if config['booleans']['qbittorrent turns off after idle ends'] == 'True':
