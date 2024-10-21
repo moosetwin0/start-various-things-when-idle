@@ -15,6 +15,7 @@ It is recommended to run this code whenever your computer starts, I use Task Sch
 - I recommend starting once and then changing config file to match preference
 
 TODO:
+- Fix YTDLP not working
 - Detect if mouse moves soon after opening archiveteam VM, and force shutdown if so (soft shutdown does not work soon after starting VMs)
 - Add config option for opening in background, useful for when screensaver time does not match config time
   - Look into CLIs or python modules for qbittorrent and wireguard
