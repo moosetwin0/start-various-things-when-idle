@@ -107,28 +107,28 @@ while(True): # this is so that the idle checking still continues if the computer
         if (fixedposition != position) and (not debug):
             mousetimer = 0
             fixedposition = win32api.GetCursorPos()
-        if (config['booleans']['do not detect idle while fullscreen'].lower() == 'true' and is_fullscreen()) or blacklisted():
+        if ((config['booleans']['do not detect idle while fullscreen']).lower() == 'true' and is_fullscreen()) or blacklisted():
             mousetimer = 0
             # mousetimer will constantly be at 0.05 if fullscreen because of above and below but it does not matter
         if debug: 
             if win32api.GetAsyncKeyState(35) < 0:
                 mousetimer = 0
             print(mousetimer)
-        mousetimer = round((mousetimer + 0.25), 2) # rounding is to remove floating point errors, does not affect anything but it looks nice
-        sleep(0.25)
+        mousetimer = round((mousetimer + 0.5), 2) # rounding is to remove floating point errors, does not affect anything but it looks nice
+        sleep(0.5)
 
     # runs the programs, REQUIRES ADMIN
     # these should be done without the repeated if statements but I (mistakenly) thought it wouldn't matter, TODO
     # subprocess doesn't like working in the background* so popen is used instead
     # apparently True != 'True' and I wish I knew that yesterday before I changed all the code
     #breakpoint()
-    if config['booleans']['wireguard on/off'].lower() == 'on':
+    if (config['booleans']['wireguard on/off']).lower() == 'on':
         os.popen(fr'"{config['paths']['wireguard executable path']}" /installtunnelservice "{config['paths']['wireguard config path']}"')
-    if config['booleans']['qbittorrent on/off'].lower() == 'on':
+    if (config['booleans']['qbittorrent on/off']).lower() == 'on':
         os.popen(fr'"{config['paths']['qbittorrent executable path']}"')
-    if config['booleans']['archiveteam VM on/off'].lower() == 'on':
+    if (config['booleans']['archiveteam VM on/off']).lower() == 'on':
         os.popen(fr'"{config['paths']['virtualbox executable path']}" startvm "{config['misc']['archiveteam warrior vm name']}"')
-    if config['booleans']['ytsync on/off'].lower() == 'on': # ytdlp does not work with os.popen() so I have to do this shiz
+    if (config['booleans']['ytsync on/off']).lower() == 'on': # ytdlp does not work with os.popen() so I have to do this shiz
         dir = os.getcwd()
         os.chdir(os.path.dirname(fr'"{config['paths']['ytsync path']}"').strip('\"').replace('\\','/')) # this hack is very cursed
         subprocess.Popen(fr'"{config['paths']['ytsync path']}"')
@@ -149,11 +149,11 @@ while(True): # this is so that the idle checking still continues if the computer
     while(True):
         position = win32api.GetCursorPos()
         if ((not debug) and (fixedposition != position)) or (debug and (win32api.GetAsyncKeyState(35) < 0)):
-            if config['booleans']['archiveteam VM turns off after idle ends'].lower() == 'true':
+            if (config['booleans']['archiveteam VM turns off after idle ends']).lower() == 'true':
                 os.popen(fr'"{config['paths']['virtualbox executable path']}" controlvm "{config['misc']['archiveteam warrior vm name']}" acpipowerbutton')
-            if config['booleans']['qbittorrent turns off after idle ends'].lower() == 'true':
+            if (config['booleans']['qbittorrent turns off after idle ends']).lower() == 'true':
                 os.popen('taskkill /im "qbittorrent.exe"')
-            if config['booleans']['wireguard turns off after idle ends'].lower() == 'true':
+            if (config['booleans']['wireguard turns off after idle ends']).lower() == 'true':
                 os.popen(fr'"{config['paths']['wireguard executable path']}" /uninstalltunnelservice "{config['paths']['wireguard config path']}"')
             break
         sleep(0.05)
