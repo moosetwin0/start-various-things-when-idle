@@ -4,6 +4,7 @@ import win32api
 import win32gui
 import configparser
 from time import sleep
+import sys # I only use this once but it's fine
 # TODO find out a way to make these optional dependencies
 # look at https://stackoverflow.com/questions/563022/whats-python-good-practice-for-importing-and-offering-optional-features
 import savepagenow
@@ -24,7 +25,7 @@ def checkIfProcessRunning(processName):
     return False;
 
 # I wanted to have this set the environment for configparser if debug was enabled *in configparser*
-if 'TERM_PROGRAM' in os.environ.keys() and os.environ['TERM_PROGRAM'] == 'vscode':
+if ('TERM_PROGRAM' in os.environ.keys() and os.environ['TERM_PROGRAM'] == 'vscode') or ('DEBUG' in os.environ):
     os.chdir(os.path.expanduser('~\\Desktop\\Code')) # configparser breaks in vscode without this
     debug = True
 else: debug = False
@@ -48,21 +49,21 @@ config = configparser.ConfigParser(allow_no_value=True)
 if not os.path.isfile('cfg.ini'):
     # defauits
     config['booleans'] = {'# change to True for on, False for off':None, 
-                          'do not detect idle while fullscreen':True,
-                          'wireguard on/off':'True', 
+                          'do not detect idle while fullscreen':'True',
+                          'wireguard on/off':'On', 
                           'wireguard turns off after idle ends':'True', 
-                          'qbittorrent on/off':True, 
-                          'qbittorrent turns off after idle ends':True, 
-                          'archiveteam VM on/off':True, 
+                          'qbittorrent on/off':'On', 
+                          'qbittorrent turns off after idle ends':'True', 
+                          'archiveteam VM on/off':'On', 
                           'archiveteam VM turns off after idle ends':True, 
-                          'ytsync on/off':True}
+                          'ytsync on/off':'On'}
     config['paths'] = {'# you do not need to fill in ones that are turned off in the boolean section':None, 
                        'wireguard executable path':r'C:\Program Files\WireGuard\wireguard.exe', 
                        'wireguard config path':r'C:\Program Files\WireGuard\Data\Configurations\wgcf-profile.conf.dpapi', 
                        'qbittorrent executable path':r'C:\Program Files\qBittorrent\qbittorrent.exe', 
                        'virtualbox executable path':r'C:\Program Files\Oracle\VirtualBox\VBoxManage.exe', 
-                       'ytsync path':r'G:\music\playlist sync.lnk'}
-    config['misc'] = {'archiveteam warrior vm name':'archiveteam-warrior-3.2', 
+                       'ytsync path':r'G:\music\yt-dlp.exe'}
+    config['misc'] = {'archiveteam warrior vm name':'archiveteam-warrior-4.1', 
                       '# the duration should be in seconds':None, 
                       'time before idle':'600', 
                       '# leave blank to turn off single web page archiving':None,
@@ -77,7 +78,14 @@ if not os.path.isfile('cfg.ini'):
                       'blacklist 3':''}
     # creating file requires admin, reading might too
     config.write(open('cfg.ini', 'w'))
-else: config.read('cfg.ini')
+    print('The config file was not found, so a new one has been created. Edit that file to your specifications, and restart the program to continue.')
+    sys.exit()
+else: 
+    config.read('cfg.ini')
+    if debug: 
+        print('config file found, it is as follows:')
+        print({section: dict(config[section]) for section in config.sections()}) #cheers!: https://stackoverflow.com/a/50362738
+        breakpoint()
 
 # running executables blacklist
 def blacklisted():
@@ -85,7 +93,7 @@ def blacklisted():
         return True
     else: return False
 
-if debug: config['misc']['time before idle'] = '10' # set time before idle to workable level if in debug environment
+if debug: config['misc']['time before idle'] = '10' # set time before idle to 10 seconds if in debug environment
 
 # more optimizable code
 # TODO, use an actual timer library rather than trying to make a crap timer that lags every time you lag
@@ -99,28 +107,28 @@ while(True): # this is so that the idle checking still continues if the computer
         if (fixedposition != position) and (not debug):
             mousetimer = 0
             fixedposition = win32api.GetCursorPos()
-        if (config['booleans']['do not detect idle while fullscreen'] == 'True' and is_fullscreen()) or blacklisted():
+        if (config['booleans']['do not detect idle while fullscreen'].lower() == 'true' and is_fullscreen()) or blacklisted():
             mousetimer = 0
             # mousetimer will constantly be at 0.05 if fullscreen because of above and below but it does not matter
         if debug: 
             if win32api.GetAsyncKeyState(35) < 0:
                 mousetimer = 0
             print(mousetimer)
-        mousetimer = round((mousetimer + 0.05), 2) # rounding is to remove floating point errors, does not affect anything but it looks nice
-        sleep(0.05)
+        mousetimer = round((mousetimer + 0.25), 2) # rounding is to remove floating point errors, does not affect anything but it looks nice
+        sleep(0.25)
 
     # runs the programs, REQUIRES ADMIN
     # these should be done without the repeated if statements but I (mistakenly) thought it wouldn't matter, TODO
     # subprocess doesn't like working in the background* so popen is used instead
     # apparently True != 'True' and I wish I knew that yesterday before I changed all the code
     #breakpoint()
-    if config['booleans']['wireguard on/off'] == 'True':
+    if config['booleans']['wireguard on/off'].lower() == 'on':
         os.popen(fr'"{config['paths']['wireguard executable path']}" /installtunnelservice "{config['paths']['wireguard config path']}"')
-    if config['booleans']['qbittorrent on/off'] == 'True':
+    if config['booleans']['qbittorrent on/off'].lower() == 'on':
         os.popen(fr'"{config['paths']['qbittorrent executable path']}"')
-    if config['booleans']['archiveteam VM on/off'] == 'True':
+    if config['booleans']['archiveteam VM on/off'].lower() == 'on':
         os.popen(fr'"{config['paths']['virtualbox executable path']}" startvm "{config['misc']['archiveteam warrior vm name']}"')
-    if config['booleans']['ytsync on/off'] == 'True': # ytdlp does not work with os.popen() so I have to do this shiz
+    if config['booleans']['ytsync on/off'].lower() == 'on': # ytdlp does not work with os.popen() so I have to do this shiz
         dir = os.getcwd()
         os.chdir(os.path.dirname(fr'"{config['paths']['ytsync path']}"').strip('\"').replace('\\','/')) # this hack is very cursed
         subprocess.Popen(fr'"{config['paths']['ytsync path']}"')
@@ -141,11 +149,11 @@ while(True): # this is so that the idle checking still continues if the computer
     while(True):
         position = win32api.GetCursorPos()
         if ((not debug) and (fixedposition != position)) or (debug and (win32api.GetAsyncKeyState(35) < 0)):
-            if config['booleans']['archiveteam VM turns off after idle ends'] == 'True':
+            if config['booleans']['archiveteam VM turns off after idle ends'].lower() == 'true':
                 os.popen(fr'"{config['paths']['virtualbox executable path']}" controlvm "{config['misc']['archiveteam warrior vm name']}" acpipowerbutton')
-            if config['booleans']['qbittorrent turns off after idle ends'] == 'True':
+            if config['booleans']['qbittorrent turns off after idle ends'].lower() == 'true':
                 os.popen('taskkill /im "qbittorrent.exe"')
-            if config['booleans']['wireguard turns off after idle ends'] == 'True':
+            if config['booleans']['wireguard turns off after idle ends'].lower() == 'true':
                 os.popen(fr'"{config['paths']['wireguard executable path']}" /uninstalltunnelservice "{config['paths']['wireguard config path']}"')
             break
         sleep(0.05)
