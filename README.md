@@ -5,6 +5,7 @@
   - [bind your client to your VPN](https://redd.it/ssy8vv) 
   - turn off qBittorrent in the config file
   - keep the VPN on, also in the config file
+  - torrent something else, ya goof
 
 ℹ️Known Issues:
 - savepagenow does not work with task scheduler, if you use it with task scheduler this will cause the program to get stuck forever: turn off single web page archiving in the config file if you want to use this script with task scheduler
