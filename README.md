@@ -1,9 +1,10 @@
 # start various things when idle
 
 > [!CAUTION] 
-> qBittorrent is assumed to have the setting 'Close qBittorrent to notification area' and 'Confirmation on exit when torrents are active' disabled, if it is enabled then it can continue torrenting after, potentially WITHOUT THE VPN ENABLED, it is also strongly recommended to [bind your torrent client to your VPN](https://redd.it/ssy8vv).
+> qBittorrent is assumed to have the settings 'Close qBittorrent to notification area' and 'Confirmation on exit when torrents are active' disabled, if they are enabled then it can continue torrenting after, potentially **WITHOUT THE VPN ENABLED**, it is also strongly recommended to [bind your torrent client to your VPN](https://redd.it/ssy8vv).
 > - If this is an issue for you, you can:
->   - [bind your client to your VPN](https://redd.it/ssy8vv) 
+>   - turn off the above two settings (!)
+>   - [bind qBittorrent to your VPN](https://redd.it/ssy8vv) (!)
 >   - turn off qBittorrent in the config file
 >   - keep the VPN on, also in the config file
 >   - stop torrenting stuff that'll get you in trouble!
