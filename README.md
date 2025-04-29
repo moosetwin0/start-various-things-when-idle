@@ -12,18 +12,18 @@
 > [!NOTE]
 > The SavePageNow module does not work with Task Scheduler, if you use it with Task Scheduler this will cause the program to get stuck forever: turn off single web page archiving in the config file if you want to use this script with it
 >
-> This requires administrator permissions for a lot of things (see code if you are worried) 
+> This requires administrator permissions for a lot of things (see code if you are worried)
+>
+> Apon first start, the script will create a config file and then exit, configure that and then start the program again.
 
 > [!TIP]
-> It is recommended to run this code whenever your computer starts, I use Task Scheduler for this
->
-> I recommend starting once and then changing config file to match preference, then restarting the script
+> I recommended running this whenever your computer starts, I use Task Scheduler for this
 
 TODO:
 - Detect if mouse moves soon after opening archiveteam VM, and force shutdown if so (soft shutdown does not work soon after starting VMs)
 - Add config option for opening in background, useful for when screensaver time does not match config time
   - Look into CLIs or python modules for qbittorrent and wireguard
-- Detect config changes and ask user if they want to restart program
+- Detect config changes and *ask user* if they want to restart program
 - Detect if run without administrator permissions and tell user
 - Detect invalid config file and tell user
 - Detect dangerous settings (other) and tell user
