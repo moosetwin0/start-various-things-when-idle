@@ -10,7 +10,6 @@ import sys # I only use this once but it's fine
 import savepagenow
 import psutil
 import subprocess
-# it makes me a bit uncomfortable having a dependency that no regular user will use, it should come pre-packaged with python but I still feel uncomfortable, TODO 
 #from timeit import timeit # silly # commented out due to only being used for debug purposes
 
 # I spent 3 hours trying to figure this out, I ended up copying code from the internet but if I touch it the code stops working and I can't figure out why
@@ -46,6 +45,7 @@ def is_fullscreen():
 config = configparser.ConfigParser(allow_no_value=True)
 
 # checks if config file exists, if it doesn't, create new one with the below defaults, if it does, read it
+# I assume reading one of these values is just as performant as reading a regular variable but that might not necessarily be true
 if not os.path.isfile('cfg.ini'):
     # defauits
     config['booleans'] = {'# change to True for on, False for off':None, 
@@ -66,6 +66,9 @@ if not os.path.isfile('cfg.ini'):
     config['misc'] = {'archiveteam warrior vm name':'archiveteam-warrior-4.1', 
                       '# the duration should be in seconds':None, 
                       'time before idle':'600', 
+                      '# how many seconds it should wait before checking if the mouse has moved':None
+                      '# lower values may cause performance issues!':None
+                      'time between polls':'20'
                       '# leave blank to turn off single web page archiving':None,
                       '# example: "URL 1 = https://www.google.com/"':None,
                       'URL 1':'',
@@ -95,6 +98,9 @@ def blacklisted():
 
 if debug: config['misc']['time before idle'] = '10' # set time before idle to 10 seconds if in debug environment
 
+# precalculate a thing
+fullscreenidle = config['booleans']['do not detect idle while fullscreen'].lower()
+
 # more optimizable code
 # TODO, use an actual timer library rather than trying to make a crap timer that lags every time you lag
 while(True): # this is so that the idle checking still continues if the computer becomes (temporarily) active
@@ -107,15 +113,16 @@ while(True): # this is so that the idle checking still continues if the computer
         if (fixedposition != position) and (not debug):
             mousetimer = 0
             fixedposition = win32api.GetCursorPos()
-        if ((config['booleans']['do not detect idle while fullscreen']).lower() == 'true' and is_fullscreen()) or blacklisted():
+        # having it only check the var once (instead of every loop) might be better on performance, TODO?
+        if fullscreenidle == 'true' and is_fullscreen() or blacklisted():
             mousetimer = 0
-            # mousetimer will constantly be at 0.05 if fullscreen because of above and below but it does not matter
+            # mousetimer will constantly be at 1 if fullscreen because of above and below but it does not matter
         if debug: 
             if win32api.GetAsyncKeyState(35) < 0:
                 mousetimer = 0
             print(mousetimer)
-        mousetimer = round((mousetimer + 0.5), 2) # rounding is to remove floating point errors, does not affect anything but it looks nice
-        sleep(0.5)
+        mousetimer+=config['misc']('time between polls')
+        sleep(config['misc']('time between polls'))
 
     # runs the programs, REQUIRES ADMIN
     # these should be done without the repeated if statements but I (mistakenly) thought it wouldn't matter, TODO
