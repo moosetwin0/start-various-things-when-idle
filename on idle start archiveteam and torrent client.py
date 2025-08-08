@@ -5,7 +5,7 @@ import win32gui
 import configparser
 from time import sleep
 import sys # I only use this once but it's fine
-# TODO find out a way to make these optional dependencies
+# TODO find out a way to make the below optional dependencies
 # look at https://stackoverflow.com/questions/563022/whats-python-good-practice-for-importing-and-offering-optional-features
 import savepagenow
 import psutil
@@ -24,7 +24,7 @@ def checkIfProcessRunning(processName):
     return False;
 
 # I wanted to have this set the environment for configparser if debug was enabled *in configparser*
-if ('TERM_PROGRAM' in os.environ.keys() and os.environ['TERM_PROGRAM'] == 'vscode') or ('DEBUG' in os.environ):
+if ('TERM_PROGRAM' in os.environ.keys() and os.environ['TERM_PROGRAM'] == 'vscode') or os.getenv("debug"):
     os.chdir(os.path.expanduser('~\\Desktop\\Code')) # configparser breaks in vscode without this
     debug = True
 else: debug = False
@@ -66,9 +66,9 @@ if not os.path.isfile('cfg.ini'):
     config['misc'] = {'archiveteam warrior vm name':'archiveteam-warrior-4.1', 
                       '# the duration should be in seconds':None, 
                       'time before idle':'600', 
-                      '# how many seconds it should wait before checking if the mouse has moved':None
-                      '# lower values may cause performance issues!':None
-                      'time between polls':'20'
+                      '# how many seconds it should wait before checking if the mouse has moved':None,
+                      '# lower values may cause performance issues!':None,
+                      'time between polls':'10',
                       '# leave blank to turn off single web page archiving':None,
                       '# example: "URL 1 = https://www.google.com/"':None,
                       'URL 1':'',
@@ -120,9 +120,9 @@ while(True): # this is so that the idle checking still continues if the computer
         if debug: 
             if win32api.GetAsyncKeyState(35) < 0:
                 mousetimer = 0
-            print(mousetimer)
-        mousetimer+=config['misc']('time between polls')
-        sleep(config['misc']('time between polls'))
+        print(mousetimer)
+        mousetimer += int(config['misc']['time between polls'])
+        sleep(int(config['misc']['time between polls']))
 
     # runs the programs, REQUIRES ADMIN
     # these should be done without the repeated if statements but I (mistakenly) thought it wouldn't matter, TODO
