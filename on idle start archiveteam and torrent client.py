@@ -1,3 +1,7 @@
+# this code is no longer being maintained, use at your own risk
+
+
+
 # there are a lot of dependencies that could be merged here, TODO
 import os
 import win32api
@@ -31,6 +35,7 @@ else: debug = False
 
 # check if window is fullscreen
 # this was originally stolen from stackoverflow but it didn't work correctly so I stole it from chatgpt instead
+# update: I don't remember using chatgpt for this but apparently I did
 def is_fullscreen():
     active_window = win32gui.GetForegroundWindow()
     while active_window == 0: # active_window will temporarily be 0 while switching windows
@@ -107,7 +112,7 @@ while(True): # this is so that the idle checking still continues if the computer
     fixedposition = win32api.GetCursorPos() # a lot of this type of code could probably be put into a dedicated function but I can't be bothered, TODO
     mousetimer = 0
     # increases mousetimer until it reaches a set value, mouse movement resets it to 0
-    while(mousetimer < int(config['misc']['time before idle'])):
+    while((mousetimer < int(config['misc']['time before idle'])) and (win32api.GetAsyncKeyState(19) == 0)): # runs code until ((mouse is still for time-before-idle seconds) or (Pause key is pressed/released)). limitation: pause key is only checked once every time-before-polls seconds
         position = win32api.GetCursorPos()
         # the below two if statements could probably be merged, TODO
         if (fixedposition != position) and (not debug):
@@ -118,7 +123,7 @@ while(True): # this is so that the idle checking still continues if the computer
             mousetimer = 0
             # mousetimer will constantly be at 1 if fullscreen because of above and below but it does not matter
         if debug: 
-            if win32api.GetAsyncKeyState(35) < 0:
+            if win32api.GetAsyncKeyState(35) < 0: # End key
                 mousetimer = 0
         print(mousetimer)
         mousetimer += int(config['misc']['time between polls'])
