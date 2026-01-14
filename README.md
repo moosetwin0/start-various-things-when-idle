@@ -3,7 +3,10 @@
 **I no longer use Windows, so the Windows build will no longer be maintained.**
 
 This is designed for Linux Mint, but other Ubuntu-based distros will probably also work.
+
 This was built assuming you are using the flatpak version of qbittorrent, and the executable version of yt-dlp.
+
+This project requires the modules Xlib and psutil to be installed
 
 > [!CAUTION] 
 > qBittorrent is assumed to have the settings 'Close qBittorrent to notification area' and 'Confirmation on exit when torrents are active' disabled, if they are enabled then it can continue torrenting after, potentially *without the vpn enabled*, it is also strongly recommended to [bind your torrent client to your VPN](https://redd.it/ssy8vv).
