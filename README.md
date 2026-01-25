@@ -8,6 +8,10 @@ This was built assuming you are using the flatpak version of qbittorrent, and th
 
 This project requires the modules Xlib and psutil to be installed.
 
+Thank you to The King Killer for the fullscreen detector script.
+
+The code for checking if the display is in fullscreen has a different license, CC BY-SA 4.0. I'm pretty sure mixing licenses like this is fine due to GPLv3 being ShareAlike compatible, but I am not a lawyer. If there is anything I should know regarding this, please tell me.
+
 > [!TIP]
 > I recommended running this whenever your computer starts, it's what I do anyways
 
